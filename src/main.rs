@@ -4,6 +4,7 @@ use std::rand;
 fn main() {
     println!("Guess the number!");
 
+    let mut max_tries = 7i;
     let secret_number = (rand::random::<uint>() % 100u) + 1u;
 
     loop {
@@ -29,6 +30,12 @@ fn main() {
                 println!("You win");
                 return;
             }
+        }
+
+        max_tries -= 1i;
+        if max_tries == 0 {
+            println!("You lost!");
+            return;
         }
     }
 }
