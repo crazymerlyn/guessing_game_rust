@@ -1,4 +1,4 @@
-guessing_game_rust
+Guessing Game
 ==================
 
 The standard guessing game written in rust
