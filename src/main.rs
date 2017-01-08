@@ -1,21 +1,23 @@
+extern crate rand;
+
 use std::io;
-use std::rand;
 
 fn main() {
     println!("Guess the number!");
 
-    let mut max_tries = 7i;
-    let secret_number = (rand::random::<uint>() % 100u) + 1u;
+    let mut tries_left = 7u32;
+    let secret_number = (rand::random::<u32>() % 100u32) + 1u32;
 
     loop {
         println!("Please enter your guess:");
 
-        let input = io::stdin().read_line().ok().expect("Failed to read input!");
-        let input_num: Option<uint> = from_str(input.as_slice().trim());
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).unwrap();
+        let input_num;
 
-        let num = match input_num {
-            Some(num) => num,
-            None      => {
+        match input.trim_right().parse::<u32>() {
+            Ok(num) => input_num = num,
+            Err(_)  => {
                 println!("Please input a number!");
                 continue;
             }
@@ -23,25 +25,21 @@ fn main() {
 
         println!("You guessed: {}", input);
 
-        match cmp(num, secret_number) {
-            Less    => println!("Too small!"),
-            Greater => println!("Too big!"),
-            Equal   => {
-                println!("You win");
-                return;
-            }
+        if input_num < secret_number {
+            println!("Too small!")
+        } else if input_num > secret_number {
+            println!("Too big!")
+        } else  {
+            println!("You win");
+            return;
         }
 
-        max_tries -= 1i;
-        if max_tries == 0 {
+        tries_left -= 1u32;
+        if tries_left == 0 {
             println!("You lost!");
             return;
         }
     }
 }
 
-fn cmp(a: uint, b: uint) -> Ordering {
-    if a < b { Less }
-    else if a > b { Greater }
-    else { Equal }
-}
+
